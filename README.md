@@ -9,6 +9,8 @@ Sur Ubuntu:
                   sudo apt-get install python3-tk
 
 ## INFORMATION IMPORTANTE 
-Le 'jeu dont vous êtes le héro' a été retravaillé avec une interface graphique dans le dossier
-'Avec_GUI_et_image'.
-Pour le lancer, ouvrir un terminal, puis : python3 'chemin du fichier'\ 
+Le 'jeu dont vous êtes le héro' a été retravaillé avec une interface graphique dans le dossier 'Avec_GUI_et_image'.
+
+Pour le lancer, ouvrir un terminal, puis entrer: python3 'chemin du fichier'\GUI_Image_jdvelh.py
+PS: la partie 'chemin du fichier' est à remplacer par le chemin qui nous ouvre le fichier 'GUI_Image_jdvelh.py'sur votre machine.
+
