@@ -1,7 +1,11 @@
 **NOTE IMPORTANTE**
 
 Ce jeu est en cours de conception, afin de faire des 'tests'.
- 
+
+**Mise en route
+dans un terminal: python GUI_Image_jdvelh.py
+
+**Informations basiques
 Les images sont soit créées, soit récupérées sur le site 'Crayon AI',
 puis retravaillée avec le logiciel 'GIMP2.0'
 pour avoir une taille de 255x257 pixels au format '*.png'.
