@@ -12,7 +12,7 @@ Ouvrez une fenêtre de terminal ou une invite de commande.
 Accédez au répertoire contenant les fichiers du jeu.
 Lancer le Jeu
 
-Pour commencer à jouer, exécutez le fichier main.py en utilisant Python :
+Pour commencer à jouer, exécutez le fichier 'jeu_dont_vous_êtes_le_héro.py' en utilisant Python :
 
 python jeu_dont_vous_êtes_le_héro.py
 
