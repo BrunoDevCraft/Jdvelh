@@ -4,6 +4,13 @@ Description
 A la base, ce jeu est un "test (avec une histoire très sommaire)" pour une aventure interactive textuelle où le joueur fait des choix pour guider l'histoire. 
 Le jeu commence à une partie initiale, et selon les choix du joueur, l'histoire évolue de différentes manières jusqu'à sa conclusion.
 
+## Dépendances utiles
+Assurez-vous de posséder les bibliothèques suivantes: python3, tkinter.
+Sur Ubuntu: 
+- **vérifier la version de python**: python --version
+- **installer tkinter (pour la version 3.x de python. La version 3.x comprend les widgets ttk)**: 
+                  sudo apt-get install python3-tk 
+
 Installation
 Pour jouer au jeu, vous devez avoir Python installé sur votre machine. Assurez-vous d'avoir Python 3.x.
 
@@ -14,7 +21,7 @@ Lancer le Jeu
 
 Pour commencer à jouer, exécutez le fichier 'jeu_dont_vous_êtes_le_héro.py' en utilisant Python :
 
-python jeu_dont_vous_êtes_le_héro.py
+python3 jeu_dont_vous_êtes_le_héro.py
 
 Le jeu se déroulera dans le terminal, où vous devrez suivre les instructions à l'écran pour faire des choix.
 
