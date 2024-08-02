@@ -23,7 +23,7 @@ Affichage de l'Histoire : Le jeu affiche la partie actuelle de l'histoire ainsi 
 Faire un Choix : Entrez le numéro correspondant à l'option que vous souhaitez choisir.
 Recommencer l'Histoire : À la fin de l'histoire, vous avez la possibilité de recommencer en entrant '1', ou de fermer le programme en entrant '2'.
 Structure des Fichiers
-main.py : Le fichier principal qui gère l'exécution du jeu et la logique des choix.
+jeu_dont_vous_êtes_le_héro.py : Le fichier principal qui gère l'exécution du jeu et la logique des choix.
 story.py : Contient les fonctions pour obtenir les parties de l'histoire et les choix disponibles.
 
 Auteurs
