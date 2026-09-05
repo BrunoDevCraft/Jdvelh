@@ -18,7 +18,7 @@ standard tkinter (comme dans la version d'origine).
 import os
 import tkinter as tk
 import tkinter.font as tkfont
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 from story import get_story_part, get_next_part
 
@@ -92,6 +92,29 @@ class AdventureGame:
 
         # Icône de fenêtre : on réutilise la toute première illustration.
         self._try_set_icon()
+
+        # Ascenseur du texte : on force le thème ttk "clam", qui est dessiné
+        # par Tk lui-même (pas délégué à l'OS), afin que nos couleurs et
+        # notre épaisseur soient bien appliquées sur toutes les plateformes
+        # (contrairement à tk.Scrollbar, souvent "écrasé" par le rendu
+        # natif du système, notamment sur macOS).
+        style = ttk.Style(self.root)
+        style.theme_use("clam")
+        style.configure(
+            "Story.Vertical.TScrollbar",
+            gripcount=0,
+            background=PALETTE["gold_soft"],   # couleur du curseur
+            troughcolor=PALETTE["panel"],       # couleur du rail
+            bordercolor=PALETTE["panel"],
+            arrowcolor=PALETTE["parchment"],
+            relief="flat",
+            arrowsize=22,
+            width=22,
+        )
+        style.map(
+            "Story.Vertical.TScrollbar",
+            background=[("active", PALETTE["gold"]), ("pressed", PALETTE["gold"])],
+        )
 
         # Toile de fond en dégradé, redessinée à chaque redimensionnement.
         self.bg_canvas = tk.Canvas(self.root, highlightthickness=0, bd=0)
@@ -275,25 +298,63 @@ class AdventureGame:
             except Exception as e:
                 messagebox.showerror("Erreur", f"Impossible de charger l'image : {e}")
 
-        # -- texte, sur un encart "parchemin" -------------------------------
-        parch_outer = tk.Frame(body, bg=PALETTE["parchment_edge"])
-        parch_outer.pack(fill="x", pady=(0, 18))
-        parch_inner = tk.Frame(parch_outer, bg=PALETTE["parchment"])
-        parch_inner.pack(fill="x", padx=2, pady=2)
-
-        self.text_label = tk.Label(
-            parch_inner, text=text, font=self.fonts["body"],
-            bg=PALETTE["parchment"], fg=PALETTE["ink"], justify="left",
-            anchor="w", padx=18, pady=16, wraplength=560,
-        )
-        self.text_label.pack(fill="x")
-        # Le retour à la ligne s'ajuste si la fenêtre est redimensionnée.
-        body.bind("<Configure>", lambda e: self.text_label.configure(
-            wraplength=max(280, e.width - 40)))
-
         # -- choix ou fin de chapitre ---------------------------------------
+        # On packe d'abord les choix, ancrés en bas ("side=bottom") : ils
+        # réservent ainsi toujours la place dont ils ont besoin et restent
+        # visibles en entier, quel que soit leur nombre (2 ou 3 choix, ou le
+        # bloc de fin de chapitre).
         choices_frame = tk.Frame(body, bg=PALETTE["panel"])
-        choices_frame.pack(fill="x")
+        choices_frame.pack(side="bottom", fill="x")
+
+        # -- texte, sur un encart "parchemin" -------------------------------
+        # Le cadre de texte occupe tout l'espace restant entre l'image et
+        # les choix : sa taille est donc uniforme d'une vignette à l'autre
+        # (elle dépend de la mise en page, pas de la longueur du texte). Si
+        # le texte est trop long pour tenir dans cet espace, un ascenseur
+        # apparaît pour le lire en entier, sans jamais empiéter sur les
+        # choix ci-dessous, qui restent toujours entièrement visibles.
+        parch_outer = tk.Frame(body, bg=PALETTE["parchment_edge"])
+        parch_outer.pack(fill="both", expand=True, pady=(0, 18))
+        parch_inner = tk.Frame(parch_outer, bg=PALETTE["parchment"])
+        parch_inner.pack(fill="both", expand=True, padx=2, pady=2)
+
+        text_wrapper = tk.Frame(parch_inner, bg=PALETTE["parchment"])
+        text_wrapper.pack(fill="both", expand=True)
+
+        self.text_label = tk.Text(
+            text_wrapper, font=self.fonts["body"], height=5, width=1,
+            bg=PALETTE["parchment"], fg=PALETTE["ink"], wrap="word",
+            relief="flat", bd=0, padx=18, pady=16,
+            highlightthickness=0, cursor="arrow",
+        )
+        # Ascenseur stylisé (thème ttk "clam" forcé plus haut) : rail sombre,
+        # curseur doré large de 22 px, bien visible sur le parchemin clair.
+        text_scroll = ttk.Scrollbar(
+            text_wrapper, orient="vertical", command=self.text_label.yview,
+            style="Story.Vertical.TScrollbar",
+        )
+        self.text_label.configure(yscrollcommand=text_scroll.set)
+
+        self.text_label.pack(side="left", fill="both", expand=True)
+        text_scroll.pack(side="right", fill="y", padx=(6, 0))
+
+        self.text_label.insert("1.0", text)
+        self.text_label.configure(state="disabled")  # lecture seule
+
+        # Confort : la molette de la souris fait défiler le texte même
+        # sans cliquer précisément sur l'ascenseur (Windows/Mac + Linux).
+        def _on_mousewheel(event):
+            if event.num == 4:          # Linux, molette vers le haut
+                delta = -1
+            elif event.num == 5:        # Linux, molette vers le bas
+                delta = 1
+            else:                       # Windows / macOS
+                delta = -1 if event.delta > 0 else 1
+            self.text_label.yview_scroll(delta, "units")
+            return "break"
+
+        for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+            self.text_label.bind(seq, _on_mousewheel)
 
         if choices:
             for i, (key, value) in enumerate(choices.items()):
