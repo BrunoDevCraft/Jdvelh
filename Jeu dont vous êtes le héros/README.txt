@@ -7,7 +7,7 @@ Le jeu commence à une partie initiale, et selon les choix du joueur, l'histoire
 ## Dépendances utiles
 Assurez-vous de posséder les bibliothèques suivantes: python3, tkinter.
 Sur Ubuntu: 
-- **vérifier la version de python**: python --version
+- **vérifier la version de python supérieur à 3.8**: python --version
 - **installer tkinter (pour la version 3.x de python. La version 3.x comprend les widgets ttk)**: 
                   sudo apt-get install python3-tk 
 
